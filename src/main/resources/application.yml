@@ -1,0 +1,72 @@
+log:
+  level: debug
+  color: true
+
+server:
+  port: 8080
+
+spring:
+  cloud:
+    circuitbreaker:
+      resilience4j:
+        enabled: true
+  main:
+    allow-bean-definition-overriding: true
+    banner-mode: off
+  output:
+    ansi:
+      enabled: ALWAYS
+  application:
+    name: poke-api-integrator
+    version: 1.0.0
+    swagger:
+      title: ${spring.application.name}
+      description: Documentation
+      terms-of-service-url: https://github.com/italo-gouveia/poke-api-integrator-java
+      license: private
+      license-url: https://github.com/italo-gouveia/poke-api-integrator-java
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    enabled: true
+    patch: /swagger-ui.html
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+feign:
+  circuitbreaker:
+    enabled: true
+  client:
+    config:
+      default:
+        connect-timeout: 30000
+        read-timeout: 30000
+        retry:
+          period: 5000
+          maxPeriod: 30000
+          maxAttempts: 3
+resilience4j:
+  circuitBreakerConfig:
+    failureRateThreshold: 50
+    waitDurationInOpenState: 1000
+    slidingWindowSize: 2
+  timeLimiterConfig:
+    timeoutInMilliseconds: 30000
+
+client:
+  pokemon:
+    url: https://pokeapi.co/api/v2
+
+cors:
+  request:
+    local: http://localhost
